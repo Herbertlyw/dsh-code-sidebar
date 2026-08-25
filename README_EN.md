@@ -1,12 +1,11 @@
-# dsh-better-sidebar
+# DSH Code Sidebar
 
 <!-- Hero -->
 <div align="center">
-  <b style="font-size: 1.15em;">A service-oriented sidebar framework, and a complete workbench out of the box</b><br /><br />
-  <a href="https://www.npmjs.com/package/dsh-better-sidebar"><img alt="npm version" src="https://img.shields.io/npm/v/dsh-better-sidebar" /></a>
-  <a href="https://www.npmjs.com/package/dsh-better-sidebar"><img alt="npm downloads" src="https://img.shields.io/npm/dm/dsh-better-sidebar" /></a>
-  <a href="https://github.com/omdsh-dev/DSH-better-sidebar/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/omdsh-dev/DSH-better-sidebar/actions/workflows/ci.yml/badge.svg" /></a>
-  <a href="https://github.com/omdsh-dev/DSH-better-sidebar/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/omdsh-dev/DSH-better-sidebar" /></a>
+  <b style="font-size: 1.15em;">A focused and stable code sidebar for DSH Desktop</b><br /><br />
+  <a href="https://github.com/Herbertlyw/dsh-code-sidebar/releases/latest"><img alt="GitHub release" src="https://img.shields.io/github/v/release/Herbertlyw/dsh-code-sidebar" /></a>
+  <a href="https://github.com/Herbertlyw/dsh-code-sidebar/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Herbertlyw/dsh-code-sidebar/actions/workflows/ci.yml/badge.svg" /></a>
+  <a href="https://github.com/Herbertlyw/dsh-code-sidebar/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/Herbertlyw/dsh-code-sidebar" /></a>
   <a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" /></a>
   <a href="https://dshfind.com/en/plugins/omdsh-dev/DSH-better-sidebar?ref=badge"><img alt="dshfind" src="https://dshfind.com/api/badge/omdsh-dev/DSH-better-sidebar?lang=en" /></a><br /><br />
   <a href="https://www.npmjs.com/package/@deepseek-ai/dsh?activeTab=versions"><img alt="Supported DSH versions: 0.1.0-rc.8 · 0.1.1-rc.1 · 0.1.1-rc.2" src="https://img.shields.io/badge/DSH-0.1.0--rc.8_%C2%B7_0.1.1--rc.1_%C2%B7_0.1.1--rc.2-4d6bfe" /></a>
@@ -15,6 +14,8 @@
   <b>A dual workbench (right sidebar + bottom panel)</b> that opens its <code>ctx.betterSidebar</code> service to every plugin —<br />
   register new sidebar pages and file viewers via <code>registerTab</code> / <code>registerFileViewer</code>.
 </div>
+
+> **Project note:** This project continues [omdsh-dev/DSH-better-sidebar](https://github.com/omdsh-dev/DSH-better-sidebar) under the MIT License, with a focus on code reading, workspace file management, and sidebar interaction in DSH Desktop. The package keeps the internal `dsh-better-sidebar` identifier for compatibility; download this edition from this repository's Releases page.
 
 <div align="center">
   🌏 <a href="./README.md">中文</a> · <a href="./README_EN.md"><b>English</b></a>
@@ -57,6 +58,26 @@
 > 🔌 **Core principle**: service-first — the 7 built-in tabs + 6 viewers register through the same `ctx.betterSidebar` API as third-party plugins, with fully equal capabilities; anything the ecosystem can provide better is delegated to ecosystem plugins (**28+ ecosystem plugins** already — see "🌐 Plugin Ecosystem" below). See "🔌 Service API" and the [external plugin guide](./docs/external-plugin-guide.md).
 
 ## 🚀 Installation
+
+### Recommended: GitHub Release package
+
+1. Download `dsh-code-sidebar.tgz` from the [latest release](https://github.com/Herbertlyw/dsh-code-sidebar/releases/latest).
+2. Replace the example path below with the absolute path to the downloaded file:
+
+```sh
+dsh plugin --profile web add /absolute/path/dsh-code-sidebar.tgz
+```
+
+3. If the first install reports `Ignored build scripts`, run the following command and repeat the install command:
+
+```sh
+cd ~/.dsh/profiles/web
+pnpm approve-builds --all
+```
+
+4. Hard-refresh DSH Desktop (`Cmd+Shift+R` on macOS, `Ctrl+Shift+R` on Windows/Linux).
+
+> The `dsh-better-sidebar@latest` commands below install the upstream npm edition and do not contain this repository's custom features. They remain only as upstream compatibility reference.
 
 **Prerequisites**: DSH installed (`dsh web` boots), Node.js ≥ 20, pnpm ≥ 10.
 
@@ -251,6 +272,17 @@ The GitHub topic [`dsh-better-sidebar`](https://github.com/topics/dsh-better-sid
 > 📣 **List your plugin**: tag your repo with the `dsh-better-sidebar` topic to appear on the [topic page](https://github.com/topics/dsh-better-sidebar); then PR one `PluginEntry` into [`src/client/plugins-tabs.ts`](./src/client/plugins-tabs.ts) / [`src/client/plugins-viewers.ts`](./src/client/plugins-viewers.ts) to join the built-in recommended catalog (data integrity is guarded by `tests/plugin-list.spec.ts`).
 
 ## 🆕 Recent Updates
+
+### v0.1.0 · DSH Code Sidebar
+
+- Theme-aware file-type icons
+- Create, import, and safely delete files or folders from the file-tree context menu
+- Immediate tree and open-tab refresh after deletion
+- Stable file-tree viewport across editor tabs without jumping or flashing
+- Fullscreen code workspace and drag-to-hide behavior
+- A permanently visible new-tab action
+
+The entries below come from the upstream project and are retained for capability and compatibility history.
 
 <div align="center">
   <a href="https://github.com/user-attachments/assets/d2aea86b-a776-4f01-a6b8-b26b27314336"><img width="33%" alt="Sidebar" src="https://github.com/user-attachments/assets/d2aea86b-a776-4f01-a6b8-b26b27314336" /></a>

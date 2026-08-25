@@ -1,12 +1,11 @@
-# dsh-better-sidebar
+# DSH Code Sidebar
 
 <!-- Hero -->
 <div align="center">
-  <b style="font-size: 1.15em;">一个服务化的侧边栏框架，一套开箱即用的完整工作台</b><br /><br />
-  <a href="https://www.npmjs.com/package/dsh-better-sidebar"><img alt="npm version" src="https://img.shields.io/npm/v/dsh-better-sidebar" /></a>
-  <a href="https://www.npmjs.com/package/dsh-better-sidebar"><img alt="npm downloads" src="https://img.shields.io/npm/dm/dsh-better-sidebar" /></a>
-  <a href="https://github.com/omdsh-dev/DSH-better-sidebar/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/omdsh-dev/DSH-better-sidebar/actions/workflows/ci.yml/badge.svg" /></a>
-  <a href="https://github.com/omdsh-dev/DSH-better-sidebar/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/omdsh-dev/DSH-better-sidebar" /></a>
+  <b style="font-size: 1.15em;">让 DSH Desktop 拥有更完整、更稳定的侧边代码工作区</b><br /><br />
+  <a href="https://github.com/Herbertlyw/dsh-code-sidebar/releases/latest"><img alt="GitHub release" src="https://img.shields.io/github/v/release/Herbertlyw/dsh-code-sidebar" /></a>
+  <a href="https://github.com/Herbertlyw/dsh-code-sidebar/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Herbertlyw/dsh-code-sidebar/actions/workflows/ci.yml/badge.svg" /></a>
+  <a href="https://github.com/Herbertlyw/dsh-code-sidebar/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/Herbertlyw/dsh-code-sidebar" /></a>
   <a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" /></a>
   <a href="https://dshfind.com/zh/plugins/omdsh-dev/DSH-better-sidebar?ref=badge"><img alt="dshfind" src="https://dshfind.com/api/badge/omdsh-dev/DSH-better-sidebar?lang=zh" /></a><br /><br />
   <a href="https://www.npmjs.com/package/@deepseek-ai/dsh?activeTab=versions"><img alt="支持的 DSH 版本：0.1.0-rc.8 · 0.1.1-rc.1 · 0.1.1-rc.2" src="https://img.shields.io/badge/DSH-0.1.0--rc.8_%C2%B7_0.1.1--rc.1_%C2%B7_0.1.1--rc.2-4d6bfe" /></a>
@@ -15,6 +14,8 @@
   <b>右侧栏 + 底部面板双工作台</b>，并把 <code>ctx.betterSidebar</code> 服务开放给所有插件——<br />
   通过 <code>registerTab</code> / <code>registerFileViewer</code> 注册新的侧边栏页面与文件预览器。
 </div>
+
+> **项目说明**：本项目基于 [omdsh-dev/DSH-better-sidebar](https://github.com/omdsh-dev/DSH-better-sidebar) 按 MIT License 继续开发，重点优化 DSH Desktop 的代码阅读、文件管理和侧边栏交互。为保持现有 DSH 挂载与插件服务兼容，安装包内部仍沿用 `dsh-better-sidebar` 标识；请从本仓库的 Releases 下载本项目版本。
 
 <div align="center">
   🌏 <a href="./README.md"><b>中文</b></a> · <a href="./README_EN.md">English</a>
@@ -57,6 +58,26 @@
 > 🔌 **核心理念**：服务优先——内置的 7 tab + 6 viewer 与第三方插件通过同一套 `ctx.betterSidebar` API 注册，能力完全对等；官方不再内置、可由生态提供的功能，交由生态插件实现（已有 **28+ 生态插件**，见下方「🌐 插件生态」）。接入文档见「🔌 服务化扩展」与 [外部插件接入指南](./docs/external-plugin-guide.md)。
 
 ## 🚀 安装
+
+### 推荐：GitHub Release 安装包
+
+1. 在 [最新版本页面](https://github.com/Herbertlyw/dsh-code-sidebar/releases/latest) 下载 `dsh-code-sidebar.tgz`。
+2. 在终端执行下面的命令，把路径替换为刚下载文件的真实路径：
+
+```sh
+dsh plugin --profile web add /绝对路径/dsh-code-sidebar.tgz
+```
+
+3. 如果首次安装提示 `Ignored build scripts`，执行以下命令后重新运行上面的安装命令：
+
+```sh
+cd ~/.dsh/profiles/web
+pnpm approve-builds --all
+```
+
+4. 安装完成后硬刷新 DSH Desktop（macOS：`Cmd+Shift+R`；Windows/Linux：`Ctrl+Shift+R`）。
+
+> 下方的 `dsh-better-sidebar@latest` 命令安装的是原作者发布的 npm 版本，不包含本仓库的定制功能，仅保留作上游兼容性参考。
 
 **前置**：已装好 DSH（`dsh web` 能正常运行），Node.js ≥ 20、pnpm ≥ 10。
 
@@ -251,6 +272,17 @@ GitHub topic [`dsh-better-sidebar`](https://github.com/topics/dsh-better-sidebar
 > 📣 **上架你的插件**：给仓库打上 `dsh-better-sidebar` topic 即出现在 [topic 页](https://github.com/topics/dsh-better-sidebar)；再向 [`src/client/plugins-tabs.ts`](./src/client/plugins-tabs.ts) / [`src/client/plugins-viewers.ts`](./src/client/plugins-viewers.ts) 提一条 `PluginEntry` PR，即可进入设置页内置推荐目录（数据完整性由 `tests/plugin-list.spec.ts` 守护）。
 
 ## 🆕 最近更新
+
+### v0.1.0 · DSH Code Sidebar
+
+- 文件类型图标与主题自适应颜色
+- 文件树右键新建、导入和安全删除文件或文件夹
+- 删除后即时刷新文件树与已打开标签页
+- 文件树滚动位置跨标签页稳定保持，切换文件不再回到顶部或闪烁
+- 全屏代码工作区与拖到最右侧自动隐藏
+- 固定可见的新建标签页按钮
+
+以下记录来自上游项目，保留用于追溯基础能力与兼容性。
 
 **支持的 DSH 版本**：<a href="https://www.npmjs.com/package/@deepseek-ai/dsh?activeTab=versions"><img alt="支持的 DSH 版本：0.1.0-rc.8 · 0.1.1-rc.1 · 0.1.1-rc.2" src="https://img.shields.io/badge/DSH-0.1.0--rc.8_%C2%B7_0.1.1--rc.1_%C2%B7_0.1.1--rc.2-4d6bfe" /></a> · 完整发布历史见 [Releases](https://github.com/omdsh-dev/DSH-better-sidebar/releases)
 
