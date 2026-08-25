@@ -19,7 +19,7 @@ import { useEffect, useRef, useState, type InputHTMLAttributes } from 'react'
 import clsx from 'clsx'
 import { Button, IconFolderOpen16, IconRefreshOutline16, Modal } from '@deepseek-ai/dsh-client-ui-primitives'
 import { api } from './api.ts'
-import { FileTree } from './FileTree.tsx'
+import { FileTree, type FileTreeDeleteTarget } from './FileTree.tsx'
 import { IconUploadOutline16 } from './icons.tsx'
 import type { OpenWithTarget } from './open-with.ts'
 import { t } from './locales.ts'
@@ -60,8 +60,8 @@ export function TreePanel(props: {
   onOpenWith?: (targetId: string, path: string) => void
   onToggleOpenWithPin?: (targetId: string) => void
   onReferenceFile: (path: string) => void
-  /** Called after a confirmed file deletion so open editor tabs can reset. */
-  onFileDeleted?: (path: string) => void
+  /** Called after a confirmed deletion so open editor tabs can reset. */
+  onPathDeleted?: (target: FileTreeDeleteTarget) => void
   /** Full-window presentation: the panel fills its host instead of docking
    *  at a fixed width. */
   full?: boolean
@@ -70,7 +70,7 @@ export function TreePanel(props: {
   /** Reports file-tree navigation movement to the editor tab. */
   onScrollTopChange: (scrollTop: number) => void
 }) {
-  const { sessionId, cwd, expanded, onToggle, onOpenFile, onOpenFileNewTab, onOpenFileSide, openWithTargets, openWithPinned, openWithSsh, onOpenWith, onToggleOpenWithPin, onReferenceFile, onFileDeleted, full, initialScrollTop, onScrollTopChange } = props
+  const { sessionId, cwd, expanded, onToggle, onOpenFile, onOpenFileNewTab, onOpenFileSide, openWithTargets, openWithPinned, openWithSsh, onOpenWith, onToggleOpenWithPin, onReferenceFile, onPathDeleted, full, initialScrollTop, onScrollTopChange } = props
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<{ matches: string[]; truncated: boolean } | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -83,8 +83,8 @@ export function TreePanel(props: {
   const [upload, setUpload] = useState<UploadSession | null>(null)
   /** True between the cancel click and the session settling (button disabled). */
   const [cancelling, setCancelling] = useState(false)
-  /** File awaiting permanent-delete confirmation. */
-  const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
+  /** Explorer entry awaiting permanent-delete confirmation. */
+  const [deleteTarget, setDeleteTarget] = useState<FileTreeDeleteTarget | null>(null)
   const [deleteBusy, setDeleteBusy] = useState(false)
   const [deleteError, setDeleteError] = useState<string | null>(null)
   /** Set by cancelUpload; the settle path shows 'upload cancelled' instead of
@@ -137,26 +137,26 @@ export function TreePanel(props: {
 
   const folderInputProps = { webkitdirectory: '' } as InputHTMLAttributes<HTMLInputElement>
 
-  /** Permanently delete the confirmed file, then refresh the tree. */
+  /** Permanently delete the confirmed entry, then refresh the tree. */
   const confirmDelete = async (): Promise<void> => {
     const target = deleteTarget
     if (target === null || deleteBusy || upload !== null) return
     setDeleteBusy(true)
     setDeleteError(null)
     try {
-      await api.fsDelete({ sessionId, cwd }, target)
+      await api.fsDelete({ sessionId, cwd }, target.path)
       setDeleteTarget(null)
       setRefreshTick(tick => tick + 1)
       setOperationFailed(false)
-      const label = relativeTo(cwd ?? '', target)
-      const status = t('deleteFileDone', { path: label })
+      const label = relativeTo(cwd ?? '', target.path)
+      const status = t('deleteDone', { path: label })
       setOperationStatus(status)
       window.setTimeout(() => {
         setOperationStatus(current => current === status ? '' : current)
       }, UPLOAD_HINT_MS)
-      onFileDeleted?.(target)
+      onPathDeleted?.(target)
     } catch (reason) {
-      setDeleteError(t('deleteFileFailed', {
+      setDeleteError(t('deleteFailed', {
         error: reason instanceof Error ? reason.message : String(reason),
       }))
     } finally {
@@ -263,9 +263,9 @@ export function TreePanel(props: {
           onOpenFile={onOpenFile}
           onOpenFileNewTab={onOpenFileNewTab}
           onOpenFileSide={onOpenFileSide}
-          onDeleteFile={(path) => {
+          onDeleteEntry={(target) => {
             setDeleteError(null)
-            setDeleteTarget(path)
+            setDeleteTarget(target)
           }}
           openWithTargets={openWithTargets}
           openWithPinned={openWithPinned}
@@ -315,7 +315,9 @@ export function TreePanel(props: {
       <Modal
         open={deleteTarget !== null}
         onClose={() => { if (!deleteBusy) setDeleteTarget(null) }}
-        title={t('deleteFileTitle')}
+        title={deleteTarget?.kind === 'directory'
+          ? t('deleteFolderTitle')
+          : deleteTarget?.kind === 'symlink' ? t('deleteSymlinkTitle') : t('deleteFileTitle')}
         closeLabel={t('cancel')}
         footer={(
           <>
@@ -323,13 +325,21 @@ export function TreePanel(props: {
               {t('cancel')}
             </Button>
             <Button variant="primary" disabled={deleteBusy} onClick={() => { void confirmDelete() }}>
-              {deleteBusy ? t('deletingFile') : t('deleteFile')}
+              {deleteBusy
+                ? t('deleting')
+                : deleteTarget?.kind === 'directory'
+                  ? t('deleteFolder')
+                  : deleteTarget?.kind === 'symlink' ? t('deleteSymlink') : t('deleteFile')}
             </Button>
           </>
         )}
       >
         <p className={css.editorDeleteDesc}>
-          {t('deleteFileDesc', { path: relativeTo(cwd ?? '', deleteTarget ?? '') })}
+          {deleteTarget?.kind === 'directory'
+            ? t('deleteFolderDesc', { path: relativeTo(cwd ?? '', deleteTarget.path) })
+            : deleteTarget?.kind === 'symlink'
+              ? t('deleteSymlinkDesc', { path: relativeTo(cwd ?? '', deleteTarget.path) })
+              : t('deleteFileDesc', { path: relativeTo(cwd ?? '', deleteTarget?.path ?? '') })}
         </p>
         {deleteError !== null && <p className={clsx(css.editorDeleteDesc, css.editorDeleteError)}>{deleteError}</p>}
       </Modal>

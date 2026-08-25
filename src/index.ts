@@ -29,7 +29,7 @@ import {
   type SidebarPrefs,
 } from './config.ts'
 import { isWithin, parentOf, requireAbsolute, listDirectory, rootLabel } from './fs-tree.ts'
-import { deleteWorkspaceFile, writeWorkspaceUpload } from './fs-operations.ts'
+import { deleteWorkspaceEntry, writeWorkspaceUpload } from './fs-operations.ts'
 import { searchFiles } from './fs-search.ts'
 import { decodeHtmlUrl } from './html-route.ts'
 import { extractFrameAncestors } from './browser-probe.ts'
@@ -285,7 +285,7 @@ function buildApi(
     },
     'fs.delete': async (payload) => {
       const { cwd } = cwdOf(payload)
-      return deleteWorkspaceFile(cwd, requireString(payload, 'path'))
+      return deleteWorkspaceEntry(cwd, requireString(payload, 'path'))
     },
     'git.status': async (payload) => {
       const { cwd } = cwdOf(payload)
