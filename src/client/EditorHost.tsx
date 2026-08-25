@@ -27,7 +27,7 @@ import { useCallback, useContext, useEffect, useMemo, useRef, useState, useSyncE
 import { createElement } from 'react'
 import clsx from 'clsx'
 import {
-  IconCheckOutline16, IconFolderOpen16, IconFullscreenOutline16, IconPlusOutline16, Menu,
+  IconCheckOutline16, IconFolderOpen16, IconFullscreenOutline16,
 } from '@deepseek-ai/dsh-client-ui-primitives'
 import type { Context } from '../context-types.ts'
 import { api, mediaUrl, type SessionScope } from './api.ts'
@@ -123,7 +123,6 @@ export function EditorHost(props: {
   const path = tab.path ?? ''
   const title = tab.title
   const [load, setLoad] = useState<EditorLoad>({ status: 'loading' })
-  const [newTabMenuOpen, setNewTabMenuOpen] = useState(false)
   const workbenchToolbar = useContext(WorkbenchToolbarContext)
 
   // Reactive prefs read: flipping editorExplorer re-renders this tab with no
@@ -479,35 +478,6 @@ export function EditorHost(props: {
           >
             <IconFullscreenOutline16 size={14} />
           </button>
-        )}
-        {workbenchToolbar !== null && (
-          <Menu
-            open={newTabMenuOpen}
-            onClose={() => { setNewTabMenuOpen(false) }}
-            items={workbenchToolbar.newTabOptions.map(option => ({
-              id: option.id,
-              label: option.label,
-              ...(option.disabled === true ? { disabled: true } : {}),
-              ...(option.icon !== undefined ? { icon: option.icon } : {}),
-            }))}
-            onSelect={(id) => {
-              workbenchToolbar.onNewTab(id)
-              setNewTabMenuOpen(false)
-            }}
-            portal
-            align="end"
-            anchor={(
-              <button
-                type="button"
-                className={css.iconButton}
-                aria-label={t('newTab')}
-                title={t('newTab')}
-                onClick={() => { setNewTabMenuOpen(open => !open) }}
-              >
-                <IconPlusOutline16 size={14} />
-              </button>
-            )}
-          />
         )}
         {toolbar?.modes === true && (
           <div className={css.editorModeToggle}>

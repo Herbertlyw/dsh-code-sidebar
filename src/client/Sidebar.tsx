@@ -1071,9 +1071,7 @@ export function Sidebar(props: { ctx: Context; store: SidebarStore }) {
     codeFocus,
     canCodeFocus: !narrow,
     toggleCodeFocus: () => { setCodeFocus(!codeFocus) },
-    newTabOptions,
-    onNewTab,
-  }), [codeFocus, narrow, setCodeFocus, newTabOptions, onNewTab])
+  }), [codeFocus, narrow, setCodeFocus])
 
   if (state === undefined || sessionId === undefined) {
     return (
