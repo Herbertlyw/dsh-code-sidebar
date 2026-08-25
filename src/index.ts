@@ -29,7 +29,7 @@ import {
   type SidebarPrefs,
 } from './config.ts'
 import { isWithin, parentOf, requireAbsolute, listDirectory, rootLabel } from './fs-tree.ts'
-import { deleteWorkspaceEntry, writeWorkspaceUpload } from './fs-operations.ts'
+import { createWorkspaceEntry, deleteWorkspaceEntry, writeWorkspaceUpload } from './fs-operations.ts'
 import { searchFiles } from './fs-search.ts'
 import { decodeHtmlUrl } from './html-route.ts'
 import { extractFrameAncestors } from './browser-probe.ts'
@@ -282,6 +282,16 @@ function buildApi(
         throw new SidebarError('fs-error', `cannot write "${path}": ${error instanceof Error ? error.message : String(error)}`, 400)
       }
       return { ok: true }
+    },
+    'fs.create': async (payload) => {
+      const { cwd } = cwdOf(payload)
+      const dir = requireString(payload, 'dir')
+      const childName = requireString(payload, 'name')
+      const kind = requireString(payload, 'kind')
+      if (kind !== 'file' && kind !== 'directory') {
+        throw new SidebarError('bad-request', 'kind must be file or directory', 400)
+      }
+      return createWorkspaceEntry({ cwd, dir, name: childName, kind })
     },
     'fs.delete': async (payload) => {
       const { cwd } = cwdOf(payload)
