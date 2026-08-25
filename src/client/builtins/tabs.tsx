@@ -119,12 +119,13 @@ export function builtinTabs(ctx: Context, options: BuiltinTabOptions = {}): read
           <OpenWithSettings pluginSettings={pluginSettings} updatePluginSetting={updatePluginSetting} />
         ),
       },
-      component: ({ ctx, store, scope, tab, expanded, onToggleDir, onReferenceFile }) => (
+      component: ({ ctx, store, scope, tab, visible, expanded, onToggleDir, onReferenceFile }) => (
         <EditorHost
           ctx={ctx}
           store={store}
           scope={scope}
           tab={tab}
+          visible={visible}
           expanded={expanded ?? []}
           onToggleDir={onToggleDir ?? (() => { /* no-op */ })}
           onReferenceFile={onReferenceFile ?? (() => { /* no-op */ })}
