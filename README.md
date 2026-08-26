@@ -1,5 +1,7 @@
 # DSH Code Sidebar
 
+**DSH Code Sidebar 是我们为 DSH Desktop 开发的侧边代码工作区插件。** 它把文件树、代码查看与编辑、终端、Git、文件新建/导入/删除和全屏代码视图直接带进会话页面，让你不离开 DSH Desktop 也能像在编辑器中一样浏览和管理项目。
+
 <!-- Hero -->
 <div align="center">
   <b style="font-size: 1.15em;">让 DSH Desktop 拥有更完整、更稳定的侧边代码工作区</b><br /><br />

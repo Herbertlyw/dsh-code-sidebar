@@ -1,5 +1,7 @@
 # DSH Code Sidebar
 
+**DSH Code Sidebar is a code workspace plugin we built for DSH Desktop.** It brings the file tree, code viewing and editing, terminal, Git, create/import/delete actions, and a fullscreen code view directly into the conversation page, so you can work with a project without switching to a separate editor.
+
 <!-- Hero -->
 <div align="center">
   <b style="font-size: 1.15em;">A focused and stable code sidebar for DSH Desktop</b><br /><br />
